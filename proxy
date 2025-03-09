@@ -1,0 +1,48 @@
+
+import os
+import google.generativeai as genai
+import requests
+
+os.environ['HTTP_PROXY'] = 'http://username:password@proxy.example.com:8080'
+os.environ['HTTPS_PROXY'] = 'http://username:password@proxy.example.com:8080'
+
+genai.configure(
+    api_key="Апи токен",
+    transport="rest"
+)
+
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 40,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-pro",
+    generation_config=generation_config,
+)
+
+chat_session = model.start_chat(
+    history=[
+        {
+            "role": "user",
+            "parts": [
+                "Первый запрос",
+            ],
+        },
+        {
+            "role": "model",
+            "parts": [
+                "ответ от ии",
+            ],
+        },
+    ]
+)
+
+
+response = chat_session.send_message("Новый запрос")
+
+
+print(response.text)
